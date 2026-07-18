@@ -44,7 +44,7 @@ CREATE TABLE `tbladmin` (
 --
 
 INSERT INTO `tbladmin` (`ID`, `AdminName`, `UserName`, `MobileNumber`, `Address`, `Email`, `Password`, `AdminRegdate`) VALUES
-(1, 'Admin', 'admin', 5689784592, 'H-911, Vihar Soraj Nagar New Delhi-110011', 'admin@gmail.com', 'f925916e2754e5e03f75dd58a5733251', '2020-07-09 11:58:35');
+(1, 'Admin', 'admin', 5689784592, 'H-911, Vihar Soraj Nagar New Delhi-110011', 'admin@gmail.com', '$2y$10$MN98nf.btr/W/S5sLb52HOfusPmYcvSGGGOF706Pkv3vQWtLZaqwW', '2020-07-09 11:58:35');
 
 -- --------------------------------------------------------
 
@@ -60,17 +60,6 @@ CREATE TABLE `tblbank` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `tblbank`
---
-
-INSERT INTO `tblbank` (`ID`, `BankName`, `ShortName`, `CreationDate`) VALUES
-(1, 'Punjab National Bank', 'PNB', '2021-09-18 08:41:32'),
-(2, 'State Bank of India', 'SBI', '2021-09-18 08:47:01'),
-(3, 'Bank of Baroda', 'BOB', '2021-09-18 08:47:22'),
-(4, 'Canara Bank of India', 'CBI', '2021-09-18 08:47:58'),
-(5, 'Bank of India', 'BOI', '2021-09-18 08:48:20'),
-(7, 'ICICI', 'ICICI', '2021-09-21 17:04:38');
-
 -- --------------------------------------------------------
 
 --
@@ -93,17 +82,6 @@ CREATE TABLE `tblbankdetail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `tblbankdetail`
---
-
-INSERT INTO `tblbankdetail` (`ID`, `IFSCCode`, `MICRCode`, `BankName`, `Address`, `StateID`, `CityID`, `Branch`, `PhoneNumber`, `BranchCode`, `ZipCode`, `CreationDate`) VALUES
-(1, 'PUNB12456', 'PUNB12456', '1', 'hkjhrehrkh4t3a', 5, 2, 'kjhkjhkjhkj', 9789789798, 'hjkj900', 123456, '2021-09-19 05:39:55'),
-(2, 'BARB0MERDEL', '250012007', '3', 'Vikash Plaza, Sri Ram Palace, Near Naveen Mandi, Delhi Road, Meerut, Uttar Pradesh- 250 002.', 5, 2, 'Delhi Road Br Meerut U P', 1800223344, 'MERDEL', 250, '2021-09-19 05:44:24'),
-(3, 'BARB0MEEGAR', '250012009', '3', 'Bank Of Baroda, 75-1, Mangal Pandey, Nagar Garh Road, Meerut, Uttar Pradesh- 250002.', 5, 2, 'Garh Road Meerut Up', 0, 'MEEGAR', 250002, '2021-09-19 05:46:35'),
-(4, 'BARB0DBMCTY', '250012013', '3', '449 Budhana Gate Opp Ismailgirls Degree College Meerut (up) Meerut Meerut Uttar Pradesh 250002', 5, 2, 'Meerut City', 1800223344, 'DBMCTY ', 250002, '2021-09-19 05:50:14'),
-(5, 'SBIN000391', 'NA', '2', 'PB NO 6 Bhopal Bairagarh Bhopal MP 462031', 6, 3, '3 EME Centre bhopal', 1457896541, '000391', 462031, '2021-09-19 05:55:15'),
-(6, 'ICICI000123', 'NA', '7', 'ABC Street', 13, 9, 'ICICI Bangalore', 1236547896, '8544', 500015, '2021-09-21 17:06:49');
-
 -- --------------------------------------------------------
 
 --
@@ -118,18 +96,6 @@ CREATE TABLE `tblcity` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `tblcity`
---
-
-INSERT INTO `tblcity` (`ID`, `StateID`, `City`, `CreationDate`) VALUES
-(1, 0, 'Varanasi', '2021-09-17 06:35:47'),
-(2, 5, 'Meerut', '2021-09-17 06:31:04'),
-(3, 6, 'Bhopal', '2021-09-17 06:31:25'),
-(4, 12, 'Patna', '2021-09-17 06:31:40'),
-(6, 5, 'Varanasi', '2021-09-17 06:22:46'),
-(7, 10, 'Amristsar', '2021-09-17 06:23:02'),
-(9, 13, 'Bangalore', '2021-09-21 17:05:34');
-
 -- --------------------------------------------------------
 
 --
@@ -143,20 +109,6 @@ CREATE TABLE `tblstate` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `tblstate`
---
-
-INSERT INTO `tblstate` (`ID`, `State`, `CreationDate`) VALUES
-(5, 'Uttar Pradesh', '2021-09-19 05:31:19'),
-(6, 'Madya Pradesh', '2021-09-17 06:19:08'),
-(7, 'Kerala', '2021-09-15 05:04:09'),
-(8, 'Tamilnadu', '2021-09-15 05:04:19'),
-(9, 'West Bangal', '2021-09-15 05:04:34'),
-(10, 'Punjab', '2021-09-15 05:04:41'),
-(11, 'Delhi', '2021-09-15 05:04:51'),
-(12, 'Bihar', '2021-09-17 06:38:17'),
-(13, 'Karnataka', '2021-09-21 17:05:01');
-
 -- --------------------------------------------------------
 
 --

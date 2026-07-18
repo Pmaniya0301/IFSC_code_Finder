@@ -107,64 +107,71 @@ $sdata=$_POST['searchifsccode'];
                       
 
 
-                            <div class="card-body">
-                                <table class="table " border="1">
-                                    <thead>
-                                        <tr>
-                                            <tr>
-                  <th>S.No.</th>
-                  <th>Bank Name</th>
-                  <th>State</th>
-                  <th>City</th>
-                  <th>Branch</th>
-                  <th>IFSC Code</th>
-                  <th>MICR Code</th>
-                  <th>Address</th>
-                  <th>Zip Code</th>
-                  <th>Contact Number</th>
-                </tr>
-                                  
-                                        </thead>
+                            <div class="card-body" style="padding: 0;">
+                                <div class="row">
                                     <?php
+                                    $sql="SELECT tblbank.BankName as bn,tblbank.ID as bid,tblbank.ShortName,tblstate.State,tblcity.ID as cid,tblcity.StateID,tblcity.City,tblbankdetail.IFSCCode,tblbankdetail.StateID,tblbankdetail.ID as bdid,tblbankdetail.CityID,tblbankdetail.BankName,tblbankdetail.MICRCode,tblbankdetail.BankName,tblbankdetail.Address,tblbankdetail.Branch,tblbankdetail.PhoneNumber,tblbankdetail.BranchCode,tblbankdetail.ZipCode,tblbankdetail.CreationDate 
+                                          from tblbankdetail 
+                                          inner join tblstate on tblbankdetail.StateID=tblstate.ID 
+                                          join tblcity on tblbankdetail.CityID=tblcity.ID 
+                                          join tblbank on tblbankdetail.BankName=tblbank.ID 
+                                          where (tblbank.BankName like '%$sdata%' || tblbankdetail.ZipCode like '%$sdata%' || tblbankdetail.Branch like '%$sdata%' || tblbankdetail.IFSCCode like '%$sdata%')
+                                          LIMIT 100";
+                                    $query = $dbh -> prepare($sql);
+                                    $query->execute();
+                                    $results=$query->fetchAll(PDO::FETCH_OBJ);
 
-$sql="SELECT tblbank.BankName as bn,tblbank.ID as bid,tblbank.ShortName,tblstate.State,tblcity.ID as cid,tblcity.StateID,tblcity.City,tblbankdetail.IFSCCode,tblbankdetail.StateID,tblbankdetail.ID as bdid,tblbankdetail.CityID,tblbankdetail.BankName,tblbankdetail.MICRCode,tblbankdetail.BankName,tblbankdetail.Address,tblbankdetail.Branch,tblbankdetail.PhoneNumber,tblbankdetail.BranchCode,tblbankdetail.ZipCode,tblbankdetail.CreationDate from tblbankdetail inner join tblstate on tblbankdetail.StateID=tblstate.ID join tblcity on tblbankdetail.CityID=tblcity.ID join tblbank on tblbankdetail.BankName=tblbank.ID where (tblbank.BankName like  '%$sdata%' || tblbankdetail.ZipCode like  '%$sdata%' || tblbankdetail.Branch like '%$sdata%')";
-$query = $dbh -> prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $row)
-{               ?>   
-              
-                <tr>
-                  <td><?php echo htmlentities($cnt);?></td>
-                  <td><?php  echo htmlentities($row->bn);?><br />
-                    (<?php  echo htmlentities($row->ShortName);?>)
-                  </td>
-                  <td><?php  echo htmlentities($row->State);?></td>
-                  <td><?php  echo htmlentities($row->City);?></td>
-                  <td><?php  echo htmlentities($row->Branch);?></td>
-                  <td style="color:blue;" >
-                    <?php  echo htmlentities($row->IFSCCode);?>
-                  </td>
-                  <td><?php  echo htmlentities($row->MICRCode);?></td>
-                  <td><?php  echo htmlentities($row->Address);?></td>
-                  <td><?php  echo htmlentities($row->ZipCode);?></td>
-                  <td><?php  echo htmlentities($row->PhoneNumber);?></td>
-                </tr>
-                 <?php 
-$cnt=$cnt+1;
-} } else { ?>
-  <tr>
-    <td colspan="10" style="color:red; text-align:center"> No record found against this search</td>
-
-  </tr>
-   
-<?php } }?>
-
-                                </table>
+                                    $cnt=1;
+                                    if($query->rowCount() > 0)
+                                    {
+                                        foreach($results as $row)
+                                        { ?>
+                                            <div class="col-lg-6 col-md-12 mb-4">
+                                                <div class="rbi-card search-card text-left">
+                                                    <div class="rbi-card-header">
+                                                        <span class="rbi-card-bank"><?php echo htmlentities($row->bn); ?></span>
+                                                        <span class="rbi-card-branch"><?php echo htmlentities($row->Branch); ?> Branch</span>
+                                                    </div>
+                                                    <div class="rbi-card-body">
+                                                        <div class="rbi-meta-row">
+                                                            <div class="rbi-meta-col">
+                                                                <span class="rbi-label">IFSC CODE</span>
+                                                                <span class="rbi-value highlight-ifsc"><?php echo htmlentities($row->IFSCCode); ?></span>
+                                                                <button class="btn-copy-mini" onclick="copyText('<?php echo htmlentities($row->IFSCCode); ?>', this)">Copy</button>
+                                                            </div>
+                                                            <div class="rbi-meta-col">
+                                                                <span class="rbi-label">MICR CODE</span>
+                                                                <span class="rbi-value"><?php echo htmlentities($row->MICRCode ? $row->MICRCode : 'NA'); ?></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="rbi-meta-row mt-2">
+                                                            <div class="rbi-meta-full">
+                                                                <span class="rbi-label">ADDRESS</span>
+                                                                <span class="rbi-value"><?php echo htmlentities($row->Address); ?></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="rbi-meta-row mt-2">
+                                                            <div class="rbi-meta-col">
+                                                                <span class="rbi-label">CITY / STATE</span>
+                                                                <span class="rbi-value"><?php echo htmlentities($row->City); ?>, <?php echo htmlentities($row->State); ?></span>
+                                                            </div>
+                                                            <div class="rbi-meta-col">
+                                                                <span class="rbi-label">ZIP / CONTACT</span>
+                                                                <span class="rbi-value"><?php echo htmlentities($row->ZipCode); ?> / <?php echo htmlentities($row->PhoneNumber ? $row->PhoneNumber : 'N/A'); ?></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php 
+                                        $cnt=$cnt+1;
+                                        } 
+                                    } else { ?>
+                                        <div class="col-12 text-center py-5">
+                                            <h5 style="color:red;"><i class="fa fa-exclamation-triangle"></i> No record found against this search.</h5>
+                                        </div>
+                                    <?php } } ?>
+                                </div>
                             </div>
                 </div>
                
@@ -198,20 +205,17 @@ $cnt=$cnt+1;
 
     <!--====== BACK TOP TOP PART ENDS ======-->  
 <script type="text/javascript">
-    function myFunction() {
-  /* Get the text field */
-  var copyText = document.getElementById("myInput");
-
-  /* Select the text field */
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); /* For mobile devices */
-
-   /* Copy the text inside the text field */
-  navigator.clipboard.writeText(copyText.value);
-
-  /* Alert the copied text */
-  alert("Copied the text: " + copyText.value);
-}
+    function copyText(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btn.textContent;
+            btn.textContent = "Copied!";
+            btn.classList.add("copied");
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove("copied");
+            }, 2000);
+        });
+    }
 </script>
 
 

@@ -3,13 +3,17 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['ifscaid']==0)) {
+if (!isset($_SESSION['ifscaid']) || strlen($_SESSION['ifscaid']) == 0) {
   header('location:logout.php');
   } else{
 
 // Code for deleting product from cart
 if(isset($_GET['delid']))
 {
+    if (!isset($_GET['csrf_token']) || !validate_csrf_token($_GET['csrf_token'])) {
+        echo "<script>alert('CSRF token validation failed.'); window.location.href = '" . basename($_SERVER['PHP_SELF']) . "';</script>";
+        exit;
+    }
 $rid=intval($_GET['delid']);
 $sql="delete from tblcity where ID=:rid";
 $query=$dbh->prepare($sql);
@@ -114,7 +118,7 @@ foreach($results as $row)
                                                         <td><?php  echo htmlentities($row->State);?></td>
                                                         <td><?php  echo htmlentities($row->City);?></td>
                                                         <td><?php  echo htmlentities($row->CreationDate);?></td>
-                                                        <td><a href="edit-city-detail.php?editid=<?php echo htmlentities ($row->cid);?>"><i class="zmdi zmdi-edit" aria-hidden="true"></i></a> | <a href="manage-city.php?delid=<?php echo ($row->cid);?>" onclick="return confirm('Do you really want to Delete ?');"><i class="zmdi zmdi-delete" aria-hidden="true"></i></a></td>
+                                                        <td><a href="edit-city-detail.php?editid=<?php echo htmlentities ($row->cid);?>"><i class="zmdi zmdi-edit" aria-hidden="true"></i></a> | <a href="manage-city.php?delid=<?php echo ($row->cid);?>&amp;csrf_token=<?php echo urlencode(generate_csrf_token()); ?>" onclick="return confirm('Do you really want to Delete ?');"><i class="zmdi zmdi-delete" aria-hidden="true"></i></a></td>
                                                         
                                                     </tr>
                                                    <?php $cnt=$cnt+1;}} ?> 

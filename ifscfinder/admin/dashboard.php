@@ -3,7 +3,7 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['ifscaid']==0)) {
+if (!isset($_SESSION['ifscaid']) || strlen($_SESSION['ifscaid']) == 0) {
   header('location:logout.php');
   } else{
 

@@ -2,11 +2,15 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['ifscaid']==0)) {
+if (!isset($_SESSION['ifscaid']) || strlen($_SESSION['ifscaid']) == 0) {
   header('location:logout.php');
   } else{
     if(isset($_POST['submit']))
   {
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        echo "<script>alert('CSRF token validation failed.'); window.location.href = '" . basename($_SERVER['PHP_SELF']) . "';</script>";
+        exit;
+    }
 
 $ifscaid=$_SESSION['ifscaid'];
  $state=$_POST['state'];
@@ -80,6 +84,7 @@ echo "<script>window.location.href ='add-state.php'</script>";
                                     
                                     <div class="p-20">
                                         <form action="#" method="post">
+                            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>" />
                                             
                                             <div class="form-group">
                                                 <label for="userName">State<span class="text-danger">*</span></label>

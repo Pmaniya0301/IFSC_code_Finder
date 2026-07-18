@@ -5,38 +5,39 @@ include('includes/dbconnection.php');
 
 if(isset($_POST['login'])) 
   {
-    $username=$_POST['username'];
-    $password=md5($_POST['password']);
-    $sql ="SELECT ID FROM tbladmin WHERE UserName=:username and Password=:password";
-    $query=$dbh->prepare($sql);
-    $query-> bindParam(':username', $username, PDO::PARAM_STR);
-$query-> bindParam(':password', $password, PDO::PARAM_STR);
-    $query-> execute();
-    $results=$query->fetchAll(PDO::FETCH_OBJ);
-    if($query->rowCount() > 0)
-{
-foreach ($results as $result) {
-$_SESSION['ifscaid']=$result->ID;
-}
+    // Validate CSRF token
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        echo "<script>alert('CSRF token validation failed. Unauthorized request.');</script>";
+    } else {
+        $username=$_POST['username'];
+        $sql ="SELECT ID, Password FROM tbladmin WHERE UserName=:username";
+        $query=$dbh->prepare($sql);
+        $query-> bindParam(':username', $username, PDO::PARAM_STR);
+        $query-> execute();
+        $row=$query->fetch(PDO::FETCH_OBJ);
+        if($row && password_verify($_POST['password'], $row->Password))
+        {
+            $_SESSION['ifscaid']=$row->ID;
 
-  if(!empty($_POST["remember"])) {
-//COOKIES for username
-setcookie ("user_login",$_POST["username"],time()+ (10 * 365 * 24 * 60 * 60));
-//COOKIES for password
-setcookie ("userpassword",$_POST["password"],time()+ (10 * 365 * 24 * 60 * 60));
-} else {
-if(isset($_COOKIE["user_login"])) {
-setcookie ("user_login","");
-if(isset($_COOKIE["userpassword"])) {
-setcookie ("userpassword","");
+            if(!empty($_POST["remember"])) {
+                //COOKIES for username
+                setcookie ("user_login",$_POST["username"],time()+ (10 * 365 * 24 * 60 * 60));
+                //COOKIES for password
+                setcookie ("userpassword",$_POST["password"],time()+ (10 * 365 * 24 * 60 * 60));
+            } else {
+                if(isset($_COOKIE["user_login"])) {
+                    setcookie ("user_login","");
+                    if(isset($_COOKIE["userpassword"])) {
+                        setcookie ("userpassword","");
+                    }
+                }
+            }
+            $_SESSION['login']=$_POST['username'];
+            echo "<script type='text/javascript'> document.location ='dashboard.php'; </script>";
+        } else{
+            echo "<script>alert('Invalid Details');</script>";
         }
-      }
-}
-$_SESSION['login']=$_POST['username'];
-echo "<script type='text/javascript'> document.location ='dashboard.php'; </script>";
-} else{
-echo "<script>alert('Invalid Details');</script>";
-}
+    }
 }
 
 ?>
@@ -79,6 +80,7 @@ echo "<script>alert('Invalid Details');</script>";
                             </div>
                         </div>
                         <form class="m-t-20" action="" method="post">
+                            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>" />
 
                             <div class="form-group row">
                                 <div class="col-12">

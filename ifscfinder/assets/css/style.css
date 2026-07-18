@@ -2197,3 +2197,151 @@ p {
       float: right; }
 
 /*# sourceMappingURL=style.css.map */
+
+
+/* ==========================================================================
+   Custom Styles for RBI Branch Locator and Search Results
+   ========================================================================== */
+.locator-container {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+.locator-select {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #333 !important;
+    border: 1px solid #ddd !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+}
+
+.locator-select:disabled {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    color: #888 !important;
+    cursor: not-allowed;
+}
+
+/* Beautiful Glassmorphic RBI Card */
+.rbi-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.rbi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.rbi-card-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    padding: 15px 20px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.rbi-card-bank {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.rbi-card-branch {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+
+.rbi-card-body {
+    padding: 20px;
+}
+
+.rbi-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.rbi-meta-row:last-child {
+    margin-bottom: 0;
+}
+
+.rbi-meta-col {
+    flex: 1;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+}
+
+.rbi-meta-full {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.rbi-label {
+    font-size: 0.75rem;
+    color: #777;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.rbi-value {
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.highlight-ifsc {
+    color: #007bff !important;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+}
+
+/* Copy Button Styling */
+.btn-copy-mini {
+    background-color: #f0f0f0;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    cursor: pointer;
+    width: fit-content;
+    margin-top: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-copy-mini:hover {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.btn-copy-mini.copied {
+    background-color: #28a745;
+    color: #fff;
+    border-color: #28a745;
+}
+
+/* Layout for Search results */
+.search-card {
+    height: 100%;
+}

@@ -2,33 +2,36 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['ifscaid']==0)) {
+if (!isset($_SESSION['ifscaid']) || strlen($_SESSION['ifscaid']) == 0) {
   header('location:logout.php');
   } else{
     if(isset($_POST['change']))
 {
-$adminid=$_SESSION['ifscaid'];
-$cpassword=md5($_POST['currentpassword']);
-$newpassword=md5($_POST['newpassword']);
-$sql ="SELECT ID FROM tbladmin WHERE ID=:adminid and Password=:cpassword";
-$query= $dbh -> prepare($sql);
-$query-> bindParam(':adminid', $adminid, PDO::PARAM_STR);
-$query-> bindParam(':cpassword', $cpassword, PDO::PARAM_STR);
-$query-> execute();
-$results = $query -> fetchAll(PDO::FETCH_OBJ);
+    // Validate CSRF token
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        echo "<script>alert('CSRF token validation failed. Unauthorized request.');</script>";
+    } else {
+        $adminid=$_SESSION['ifscaid'];
+        $sql = "SELECT Password FROM tbladmin WHERE ID=:adminid";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':adminid', $adminid, PDO::PARAM_STR);
+        $query->execute();
+        $row = $query->fetch(PDO::FETCH_OBJ);
 
-if($query -> rowCount() > 0)
-{
-$con="update tbladmin set Password=:newpassword where ID=:adminid";
-$chngpwd1 = $dbh->prepare($con);
-$chngpwd1-> bindParam(':adminid', $adminid, PDO::PARAM_STR);
-$chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
-$chngpwd1->execute();
+        if($row && password_verify($_POST['currentpassword'], $row->Password))
+        {
+            $newhash = password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
+            $con="update tbladmin set Password=:newpassword where ID=:adminid";
+            $chngpwd1 = $dbh->prepare($con);
+            $chngpwd1-> bindParam(':adminid', $adminid, PDO::PARAM_STR);
+            $chngpwd1-> bindParam(':newpassword', $newhash, PDO::PARAM_STR);
+            $chngpwd1->execute();
 
-echo '<script>alert("Your password successully changed")</script>';
-} else {
-echo '<script>alert("Your current password is wrong")</script>';
-
+            echo '<script>alert("Your password successully changed")</script>';
+        } else {
+            echo '<script>alert("Your current password is wrong")</script>';
+        }
+    }
 }
 }
   ?>
@@ -93,7 +96,8 @@ return true;
                                     <h4 class="header-title m-t-0">Change Password</h4>
                                     
                                     <div class="p-20">
-                                        <form action="#" method="post" name="changepassword" method="post" onsubmit="return checkpass();">
+                                        <form action="#" method="post" name="changepassword" onsubmit="return checkpass();">
+                                            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>" />
                                             <div class="form-group">
                                                 <label for="userName">Current Password<span class="text-danger">*</span></label>
                                                 <input type="password" name="currentpassword" id="currentpassword" class="form-control" required="true">

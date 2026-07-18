@@ -2,11 +2,15 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['ifscaid']==0)) {
+if (!isset($_SESSION['ifscaid']) || strlen($_SESSION['ifscaid']) == 0) {
   header('location:logout.php');
   } else{
     if(isset($_POST['submit']))
   {
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        echo "<script>alert('CSRF token validation failed.'); window.location.href = '" . basename($_SERVER['PHP_SELF']) . "';</script>";
+        exit;
+    }
 
 
   $ifsccode=$_POST['ifsccode'];
@@ -103,6 +107,7 @@ $("#city").html(data);
                                     
                                     <div class="p-20">
                                         <form action="#" method="post">
+                            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>" />
                                            <?php
                    $eid=$_GET['editid'];
 $sql="SELECT tblbank.BankName as bn,tblbank.ID as bid,tblbank.ShortName,tblstate.State,tblcity.ID as cid,tblcity.StateID,tblcity.City,tblbankdetail.IFSCCode,tblbankdetail.StateID,tblbankdetail.ID as bdid,tblbankdetail.CityID,tblbankdetail.BankName,tblbankdetail.MICRCode,tblbankdetail.BankName,tblbankdetail.Address,tblbankdetail.Branch,tblbankdetail.PhoneNumber,tblbankdetail.BranchCode,tblbankdetail.ZipCode,tblbankdetail.CreationDate from tblbankdetail inner join tblstate on tblbankdetail.StateID=tblstate.ID join tblcity on tblbankdetail.CityID=tblcity.ID join tblbank on tblbankdetail.BankName=tblbank.ID  where tblbankdetail.ID=:eid";

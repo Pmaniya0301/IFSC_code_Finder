@@ -2,11 +2,15 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['ifscaid']==0)) {
+if (!isset($_SESSION['ifscaid']) || strlen($_SESSION['ifscaid']) == 0) {
   header('location:logout.php');
   } else{
     if(isset($_POST['submit']))
   {
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        echo "<script>alert('CSRF token validation failed.'); window.location.href = '" . basename($_SERVER['PHP_SELF']) . "';</script>";
+        exit;
+    }
 
 
  $state=$_POST['state'];
@@ -76,6 +80,7 @@ $query->bindParam(':eid',$eid,PDO::PARAM_STR);
                                     
                                     <div class="p-20">
                                         <form action="#" method="post">
+                            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>" />
                                            <?php
                    $eid=$_GET['editid'];
 $sql="SELECT * from tblstate  where ID=:eid";
